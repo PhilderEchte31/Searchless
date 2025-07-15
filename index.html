@@ -32,13 +32,15 @@
       transition: background-color 0.5s ease, color 0.5s ease;
     }
 
-    h1 {
+    .logo-container {
       text-align: center;
       margin-top: 40px;
-      font-size: 3rem;
-      font-weight: 700;
-      letter-spacing: -0.03em;
       animation: fadeIn 0.8s ease-in-out;
+    }
+
+    .logo-container img {
+      height: 3rem;
+      max-width: 100%;
     }
 
     .search-box {
@@ -166,7 +168,9 @@
   </style>
 </head>
 <body>
-  <h1>Searchless</h1>
+  <div class="logo-container">
+    <img src="https://i.ibb.co/0Rwk8422/searchless-logo-1.png" alt="Searchless Logo" />
+  </div>
 
   <div class="search-box">
     <form action="https://www.google.com/search" method="GET" target="_self" id="searchForm">
