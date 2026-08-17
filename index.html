@@ -764,6 +764,175 @@
     .engine-option.active .engine-check {
       opacity: 1;
     }
+
+    /* ── Präferenzen-Button ── */
+    #prefs-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 78px;
+      z-index: 10000;
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      color: var(--muted);
+      background: var(--surface);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      box-shadow: var(--shadow-small);
+      cursor: pointer;
+      transition: color .18s ease, background .18s ease, transform .22s ease, box-shadow .18s ease;
+    }
+
+    #prefs-btn:hover {
+      color: var(--accent);
+      background: var(--surface-hover);
+      transform: scale(1.07);
+      box-shadow: 0 8px 24px rgba(0,113,227,.22);
+    }
+
+    #prefs-btn.open {
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    /* ── Präferenzen-Panel ── */
+    #prefs-panel {
+      position: fixed;
+      bottom: 80px;
+      right: 78px;
+      z-index: 9999;
+      width: 240px;
+      padding: 8px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--surface-solid);
+      box-shadow: 0 16px 48px rgba(0,0,0,.22);
+      opacity: 0;
+      transform: translateY(8px) scale(.97);
+      pointer-events: none;
+      transition: opacity .18s ease, transform .18s ease;
+    }
+
+    body.dark #prefs-panel {
+      background: #1c2030;
+      border-color: rgba(255,255,255,.12);
+      box-shadow: 0 16px 48px rgba(0,0,0,.55);
+    }
+
+    #prefs-panel.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .prefs-section {
+      padding: 4px 0;
+    }
+
+    .prefs-section + .prefs-section {
+      border-top: 1px solid var(--border);
+      margin-top: 4px;
+      padding-top: 8px;
+    }
+
+    .prefs-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 12px;
+    }
+
+    .prefs-row-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .88rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .prefs-row-label svg {
+      color: var(--muted);
+      flex: 0 0 auto;
+    }
+
+    /* Sprach-Toggle */
+    .lang-toggle {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      overflow: hidden;
+      flex: 0 0 auto;
+    }
+
+    .lang-btn {
+      padding: 4px 10px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .03em;
+      transition: background .14s ease, color .14s ease;
+    }
+
+    .lang-btn.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* History-Toggle (Switch) */
+    .switch {
+      position: relative;
+      width: 38px;
+      height: 22px;
+      flex: 0 0 auto;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+
+    .switch-track {
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: background .2s ease;
+    }
+
+    .switch input:checked + .switch-track {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .switch-thumb {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,.22);
+      transition: transform .2s ease;
+      pointer-events: none;
+    }
+
+    .switch input:checked ~ .switch-thumb {
+      transform: translateX(16px);
+    }
   </style>
 </head>
 
@@ -878,6 +1047,49 @@
       © 2026 <a href="/" aria-label="Searchless">Searchless</a>
     </footer>
   </main>
+
+  <!-- Präferenzen-Button -->
+  <button id="prefs-btn" aria-label="Präferenzen" title="Sprache & Verlauf">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true">
+      <path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2ZM4 20c0-3.314 3.582-6 8-6s8 2.686 8 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+  </button>
+
+  <!-- Präferenzen-Panel -->
+  <div id="prefs-panel" role="dialog" aria-label="Präferenzen">
+    <div class="settings-label" id="prefs-title">Einstellungen</div>
+
+    <div class="prefs-section">
+      <div class="prefs-row">
+        <span class="prefs-row-label">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" aria-hidden="true">
+            <path d="M12.87 3.5c-.44-1-1.3-1-1.74 0L3.44 20h2.16l1.6-3.86h9.6L18.4 20h2.16L12.87 3.5Zm-4.95 11 3.08-7.44L14.08 14.5H7.92Z" fill="currentColor"/>
+          </svg>
+          <span id="lang-label">Sprache</span>
+        </span>
+        <div class="lang-toggle">
+          <button class="lang-btn active" id="lang-de" type="button">DE</button>
+          <button class="lang-btn" id="lang-en" type="button">EN</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="prefs-section">
+      <div class="prefs-row">
+        <span class="prefs-row-label">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" aria-hidden="true">
+            <path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span id="history-toggle-label">Suchverlauf</span>
+        </span>
+        <label class="switch" aria-label="Suchverlauf aktivieren">
+          <input type="checkbox" id="history-toggle" checked />
+          <span class="switch-track"></span>
+          <span class="switch-thumb"></span>
+        </label>
+      </div>
+    </div>
+  </div>
 
   <!-- Einstellungs-Button -->
   <button id="settings-btn" aria-label="Einstellungen" title="Suchmaschine wählen">
@@ -1164,12 +1376,7 @@
         }, 160);
       });
 
-      input.addEventListener("focus", () => {
-        if (!input.value.trim()) {
-          const history = getHistory();
-          if (history.length) renderSuggestions(history.slice(0, 6), "Letzte Suchen");
-        }
-      });
+      // focus-Handler wird im Prefs-Block ersetzt (berücksichtigt History-Toggle & Sprache)
 
       input.addEventListener("keydown", (event) => {
         if (event.key === "ArrowDown" && suggestions.length) {
@@ -1207,7 +1414,7 @@
 
       form.addEventListener("submit", () => {
         const query = input.value.trim();
-        if (query) saveHistory(query);
+        // History-Toggle wird im Prefs-Block gehandhabt (capture phase)
         closeSuggestions();
       });
 
@@ -1334,6 +1541,245 @@
       // Beim Start die gespeicherte Engine anwenden
       renderEngineOptions();
       applyEngine(getActiveEngine());
+
+      /* ── Präferenzen: Sprache & Verlauf ── */
+      const LANG_KEY    = "searchless-lang-v1";
+      const HISTORY_ENABLED_KEY = "searchless-history-enabled-v1";
+
+      const prefsBtn    = document.getElementById("prefs-btn");
+      const prefsPanel  = document.getElementById("prefs-panel");
+      const langDe      = document.getElementById("lang-de");
+      const langEn      = document.getElementById("lang-en");
+      const histToggle  = document.getElementById("history-toggle");
+
+      // ── Übersetzungen ──
+      const i18n = {
+        de: {
+          prefsTitle: "Einstellungen",
+          langLabel: "Sprache",
+          histLabel: "Suchverlauf",
+          searchPlaceholder: "Wonach suchst du?",
+          clearLabel: "Suche löschen",
+          clearHistBtn: "Verlauf löschen",
+          histSectionLabel: "Letzte Suchen",
+          histTitle: "Letzte Suchen",
+          searchBtn: "Suchen",
+          subtitle: "Eine schnelle, minimalistische Suchoberfläche ohne unnötigen Ballast.",
+          darkMode: "Dark Mode",
+          lightMode: "Light Mode",
+          feat1title: "Minimalistisch",
+          feat1desc: "Nur das, was du zum Suchen brauchst.",
+          feat2title: "Schnell",
+          feat2desc: "Direkte Suche mit intelligenten Vorschlägen.",
+          feat3title: "Dein Look",
+          feat3desc: "Light & Dark Mode werden automatisch gespeichert.",
+          histVerlauf: "Verlauf",
+          histVorschlag: "Vorschlag",
+          settingsEngineLabel: "Suchmaschine",
+          prefsBtn: "Sprache & Verlauf",
+          settingsBtn: "Suchmaschine wählen",
+          removeFromHistory: (q) => `„${q}" aus Verlauf entfernen`,
+        },
+        en: {
+          prefsTitle: "Settings",
+          langLabel: "Language",
+          histLabel: "Search History",
+          searchPlaceholder: "What are you looking for?",
+          clearLabel: "Clear search",
+          clearHistBtn: "Clear history",
+          histSectionLabel: "Recent Searches",
+          histTitle: "Recent Searches",
+          searchBtn: "Search",
+          subtitle: "A fast, minimalist search interface without unnecessary clutter.",
+          darkMode: "Dark Mode",
+          lightMode: "Light Mode",
+          feat1title: "Minimalist",
+          feat1desc: "Only what you need to search.",
+          feat2title: "Fast",
+          feat2desc: "Direct search with smart suggestions.",
+          feat3title: "Your Look",
+          feat3desc: "Light & Dark Mode are saved automatically.",
+          histVerlauf: "History",
+          histVorschlag: "Suggestion",
+          settingsEngineLabel: "Search Engine",
+          prefsBtn: "Language & History",
+          settingsBtn: "Choose search engine",
+          removeFromHistory: (q) => `Remove „${q}" from history`,
+        }
+      };
+
+      function getLang() {
+        return safeStorageGet(LANG_KEY, "de");
+      }
+
+      function applyLang(lang) {
+        const t = i18n[lang];
+        safeStorageSet(LANG_KEY, lang);
+
+        // Button-Zustände
+        langDe.classList.toggle("active", lang === "de");
+        langEn.classList.toggle("active", lang === "en");
+
+        // UI-Texte aktualisieren
+        document.getElementById("prefs-title").textContent = t.prefsTitle;
+        document.getElementById("lang-label").textContent = t.langLabel;
+        document.getElementById("history-toggle-label").textContent = t.histLabel;
+        document.getElementById("searchInput").placeholder = t.searchPlaceholder;
+        document.getElementById("clearButton").setAttribute("aria-label", t.clearLabel);
+        document.getElementById("clearHistoryButton").textContent = t.clearHistBtn;
+        document.querySelector(".history-title").textContent = t.histTitle;
+        document.getElementById("historySection").setAttribute("aria-label", t.histSectionLabel);
+        document.querySelector(".search-button span").textContent = t.searchBtn;
+        document.querySelector(".subtitle").textContent = t.subtitle;
+        prefsBtn.setAttribute("title", t.prefsBtn);
+        document.getElementById("settings-btn").setAttribute("title", t.settingsBtn);
+
+        // Features
+        const features = document.querySelectorAll(".feature");
+        if (features[0]) {
+          features[0].querySelector("strong").textContent = t.feat1title;
+          features[0].querySelector("span").textContent  = t.feat1desc;
+        }
+        if (features[1]) {
+          features[1].querySelector("strong").textContent = t.feat2title;
+          features[1].querySelector("span").textContent  = t.feat2desc;
+        }
+        if (features[2]) {
+          features[2].querySelector("strong").textContent = t.feat3title;
+          features[2].querySelector("span").textContent  = t.feat3desc;
+        }
+
+        // Dark/Light-Mode-Label neu setzen
+        const isDark = body.classList.contains("dark");
+        document.getElementById("themeLabel").textContent = isDark ? t.lightMode : t.darkMode;
+
+        // Settings-Panel Label
+        document.querySelector(".settings-label").textContent = t.settingsEngineLabel;
+
+        // History-Chips neu rendern (damit Entfernen-Label stimmt)
+        renderHistoryChipsLocalized(lang);
+      }
+
+      // Lokalisiertes History-Chips-Rendering
+      function renderHistoryChipsLocalized(lang) {
+        const t = i18n[lang] || i18n.de;
+        const history = getHistory();
+        historySection.hidden = history.length === 0;
+        historyChips.replaceChildren();
+
+        history.forEach(query => {
+          const chip = document.createElement("span");
+          chip.className = "history-chip";
+
+          const queryButton = document.createElement("button");
+          queryButton.type = "button";
+          queryButton.className = "history-chip-query";
+          queryButton.textContent = query;
+          queryButton.title = query;
+          queryButton.addEventListener("click", () => {
+            input.value = query;
+            updateClearButton();
+            closeSuggestions();
+            input.focus();
+            form.requestSubmit();
+          });
+
+          const remove = document.createElement("button");
+          remove.type = "button";
+          remove.className = "history-chip-remove";
+          remove.setAttribute("aria-label", t.removeFromHistory(query));
+          remove.innerHTML = "&times;";
+          remove.addEventListener("click", (event) => {
+            event.stopPropagation();
+            removeHistoryItem(query);
+          });
+
+          chip.append(queryButton, remove);
+          historyChips.appendChild(chip);
+        });
+      }
+
+      // History-Ein/Aus
+      function getHistoryEnabled() {
+        return safeStorageGet(HISTORY_ENABLED_KEY, "true") === "true";
+      }
+
+      function applyHistoryEnabled(enabled) {
+        safeStorageSet(HISTORY_ENABLED_KEY, String(enabled));
+        histToggle.checked = enabled;
+        historySection.hidden = !enabled || getHistory().length === 0;
+        if (!enabled) {
+          // Chips verstecken, aber nicht löschen
+          historySection.hidden = true;
+        } else {
+          renderHistoryChips();
+        }
+      }
+
+      // Override saveHistory um History-Toggle zu berücksichtigen
+      const _origSaveHistory = saveHistory;
+      // Patch: wir überschreiben das Submit-Verhalten
+      form.addEventListener("submit", () => {
+        if (getHistoryEnabled()) {
+          const query = input.value.trim();
+          if (query) saveHistory(query);
+        }
+        closeSuggestions();
+      }, true);
+
+      // Vorschläge aus Verlauf nur wenn aktiviert
+      input.addEventListener("focus", () => {
+        if (!input.value.trim() && getHistoryEnabled()) {
+          const history = getHistory();
+          const t = i18n[getLang()] || i18n.de;
+          if (history.length) renderSuggestions(history.slice(0, 6), t.histTitle);
+        }
+      });
+
+      // Prefs-Panel öffnen/schließen
+      function openPrefs() {
+        prefsPanel.classList.add("open");
+        prefsBtn.classList.add("open");
+        prefsBtn.setAttribute("aria-expanded", "true");
+        closeSettings(); // Settings schließen wenn Prefs öffnet
+      }
+
+      function closePrefs() {
+        prefsPanel.classList.remove("open");
+        prefsBtn.classList.remove("open");
+        prefsBtn.setAttribute("aria-expanded", "false");
+      }
+
+      prefsBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        prefsPanel.classList.contains("open") ? closePrefs() : openPrefs();
+      });
+
+      prefsPanel.addEventListener("click", (e) => e.stopPropagation());
+
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest("#prefs-btn") && !e.target.closest("#prefs-panel")) {
+          closePrefs();
+        }
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closePrefs();
+      });
+
+      // Sprach-Buttons
+      langDe.addEventListener("click", () => { applyLang("de"); });
+      langEn.addEventListener("click", () => { applyLang("en"); });
+
+      // History-Toggle
+      histToggle.addEventListener("change", () => {
+        applyHistoryEnabled(histToggle.checked);
+      });
+
+      // Beim Start: gespeicherte Einstellungen anwenden
+      histToggle.checked = getHistoryEnabled();
+      applyLang(getLang());
+      applyHistoryEnabled(getHistoryEnabled());
 
     })();
   </script>
